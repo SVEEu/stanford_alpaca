@@ -5,6 +5,8 @@ pip install -r requirements.txt
 export GPU_NUM=${GPU_NUM:-8}
 export MASTER_PORT=${MASTER_PORT:-23456}
 
+export WANDB_DISABLED=true
+
 torchrun --nproc_per_node=$GPU_NUM --master_port=$MASTER_PORT train.py \
     --cache_dir ./tmp/cache_dir \
     --config_name "facebook/opt-6.7b" \
