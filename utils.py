@@ -1,3 +1,4 @@
+from __future__ import annotations
 import dataclasses
 import logging
 import math
@@ -7,7 +8,6 @@ import sys
 import time
 import json
 from typing import Optional, Sequence, Union, Dict
-from future import annotations
 
 import openai
 import tqdm
