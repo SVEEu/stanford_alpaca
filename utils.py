@@ -6,7 +6,8 @@ import io
 import sys
 import time
 import json
-from typing import Optional, Sequence, Union
+from typing import Optional, Sequence, Union, Dict
+from future import annotations
 
 import openai
 import tqdm
