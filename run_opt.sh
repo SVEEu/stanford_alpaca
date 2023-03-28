@@ -1,6 +1,6 @@
 export $MASTER_PORT=${$MASTER_PORT:-127.0.0.1}
 
-torchrun --nproc_per_node=8 --master_port=<your_random_port> train.py \
+torchrun --nproc_per_node=8 --master_port=$MASTER_PORT train.py \
     --cache_dir ./tmp/cache_dir \
     --config_name "facebook/opt-6.7b" \
     --data_path ./alpaca_data.json \
