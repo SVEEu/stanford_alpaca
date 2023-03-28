@@ -24,4 +24,3 @@ torchrun --nproc_per_node=8 --master_port=$MASTER_PORT train.py \
     --logging_steps 1 \
     --fsdp "full_shard auto_wrap" \
     --fsdp_transformer_layer_cls_to_wrap 'OPTDecoderLayer' \
-    --tf32 True
