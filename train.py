@@ -47,6 +47,7 @@ PROMPT_DICT = {
 class ModelArguments:
     model_name_or_path: Optional[str] = field(default=None)
     config_name: Optional[str] = field(default=None)
+    report_to: Optional[str] = field(default='tensorboard')
 
 
 @dataclass
@@ -198,7 +199,7 @@ def train():
         config = transformers.AutoConfig.from_pretrained(model_args.config_name, cache_dir=training_args.cache_dir)
         model = transformers.AutoModelForCausalLM.from_config(config)
         n_params = sum(dict((p.data_ptr(), p.numel()) for p in model.parameters()).values())
-        print(f"Training new model from scratch - Total size={n_params/2**20:.2f}M params")
+        print(f"Training new model from scratch - Total size={n_params/10**9:.2f}B params")
 
     else:
         model = transformers.AutoModelForCausalLM.from_pretrained(
