@@ -47,7 +47,6 @@ PROMPT_DICT = {
 class ModelArguments:
     model_name_or_path: Optional[str] = field(default=None)
     config_name: Optional[str] = field(default=None)
-    report_to: Optional[str] = field(default='tensorboard')
 
 
 @dataclass
