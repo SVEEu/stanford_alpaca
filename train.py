@@ -45,7 +45,8 @@ PROMPT_DICT = {
 
 @dataclass
 class ModelArguments:
-    model_name_or_path: Optional[str] = field(default="facebook/opt-125m")
+    model_name_or_path: Optional[str] = field(default=None)
+    config_name: Optional[str] = field(default=None)
 
 
 @dataclass
@@ -193,13 +194,22 @@ def train():
     parser = transformers.HfArgumentParser((ModelArguments, DataArguments, TrainingArguments))
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
 
-    model = transformers.AutoModelForCausalLM.from_pretrained(
-        model_args.model_name_or_path,
-        cache_dir=training_args.cache_dir,
-    )
+    if model_args.config_name:
+        config = transformers.AutoConfig.from_pretrained(model_args.config_name, cache_dir=training_args.cache_dir)
+        model = transformers.AutoModelForCausalLM.from_config(config)
+        n_params = sum(dict((p.data_ptr(), p.numel()) for p in model.parameters()).values())
+        print(f"Training new model from scratch - Total size={n_params/2**20:.2f}M params")
+
+    else:
+        model = transformers.AutoModelForCausalLM.from_pretrained(
+            model_args.model_name_or_path,
+            cache_dir=training_args.cache_dir,
+        )
+
+    model_name = model_args.config_name or model_args.model_name_or_path
 
     tokenizer = transformers.AutoTokenizer.from_pretrained(
-        model_args.model_name_or_path,
+        model_name,
         cache_dir=training_args.cache_dir,
         model_max_length=training_args.model_max_length,
         padding_side="right",
@@ -211,7 +221,7 @@ def train():
             tokenizer=tokenizer,
             model=model,
         )
-    if "llama" in model_args.model_name_or_path:
+    if "llama" in model_name:
         tokenizer.add_special_tokens(
             {
                 "eos_token": DEFAULT_EOS_TOKEN,
