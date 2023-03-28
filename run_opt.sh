@@ -1,3 +1,7 @@
+set -x
+
+pip install -r requirements.txt
+
 export $MASTER_PORT=${$MASTER_PORT:-127.0.0.1}
 
 torchrun --nproc_per_node=8 --master_port=$MASTER_PORT train.py \
